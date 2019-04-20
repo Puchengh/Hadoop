@@ -1,0 +1,19 @@
+<property>
+    <name>dfs.namenode.name.dir</name>
+    <value>/home/hadoop/data/hadoopdata/name</value>
+</property>
+<property>
+    <name>dfs.datanode.data.dir</name>
+    <value>/home/hadoop/data/hadoopdata/data</value>
+    <description>datanode的数据存储目录</description>
+</property>
+<property>
+    <name>dfs.replication</name>
+    <value>2</value>
+    <description>HDFS的数据块的副本存储个数</description>
+</property>
+<property>
+    <name>dfs.secondary.http.address</name>
+    <value>hadoop02:50090</value>
+    <description>secondary运行节点的信息和namenode不同节点</description>
+</property>

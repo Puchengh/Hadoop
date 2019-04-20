@@ -1,0 +1,9 @@
+<property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://hadoop01:9000</value>
+</property>
+<property>
+    <name>hadoop.tmp.dir</name>
+    <!-- 一定配置在有权限的目录下 -->
+    <value>/home/hadoop/data/hadoopdata</value>
+</property>

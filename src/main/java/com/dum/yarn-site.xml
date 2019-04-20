@@ -1,0 +1,9 @@
+<property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoop03</value>
+</property>
+<property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+    <description>YARN集群MapReduce程序提供的shuffle服务</description>
+</property>
