@@ -1,70 +1,68 @@
-HDFS��4����� 2�����
-HDFS�ṩ���Ǹ��ݴ��Եķֲ�ʽ�����ݴ洢����
-    Hadoop��Ⱥ������ʱ�򣬸�������������˳��  nameNode --> dataNode --> secondaryNameNode
-    4�����
-        ��������
-            ��Ⱥ�ڵ�֮�������ʱ��ͬ��
-            nameNode�Ǽ�Ⱥ���ϴ󣬸���Ⱥ������ķֹ������Ҫ���зֹ��������Ҫ֪�������ӽڵ�Ĵ��״��
-            ͨ��dataNodeĬ��ÿ��������nameNode������������
-        ��ȫģʽ
-        ���ܲ���
-        ���ؾ���
-    2�����
-        �ϴ�
-        ����
-        Ԫ���ݵĹ���
-��ȫ�ֲ�ʽ���װ
-    һ���л��û�Ϊ��ͨ�û�
-    ����һ���ڵ���ִ�����е��޸�  ��Զ�̷��͵������ڵ�
-    1 �ϴ�
-    2 ��ѹ
-    3 ���û�������
-    4 �޸������ļ�  6�������ļ�
-        ��Ⱥ�滮
+HDFS的4大机制 2大核心
+HDFS提供的是高容错性的分布式的数据存储方案
+    Hadoop集群启动的时候，各个进程启动的顺序  nameNode --> dataNode --> secondaryNameNode
+    4大机制
+        心跳机制
+            集群节点之间必须做时间同步
+            nameNode是集群的老大，负责集群上任务的分工，如果要进行分工，则必须要知道各个从节点的存活状况
+            通过dataNode默认每个三秒向nameNode发送心跳报告
+        安全模式
+        机架策略
+        负载均衡
+    2大核心
+        上传
+        下载
+        元数据的管理
+完全分布式搭建安装
+    一定切换用户为普通用户
+    现在一个节点上执行所有的修改  在远程发送到其他节点
+    1 上传
+    2 解压
+    3 配置环境变量
+    4 修改配置文件  6个配置文件
+        集群规划
                           hdfs                                                yarn
         hadoop1    nameNode  dataNode                                              nodeManager
         hadoop2              dataNode    secondaryNameNode                         nodeManager
         hadopp3              dataNode                             resourceManager  nodeManager
-    5Զ�̷���   ��ͨ�û��������˵�ʱ�����һ��sudo
-    Զ�̷��� /etc/profile�ļ�
+    5远程发送   普通用户操作不了的时候加上一个sudo
+    远程发送 /etc/profile文件
     scp -r hadoop-2.9.0 hadoop03:$pwd
     source /etc/profile
 
-    6 ��ʽ��  ������nameNode�Ľڵ���
+    6 格式化  必须在nameNode的节点上
     hadoop namenode -format
-    7   ����hdfs  start-dfs.sh  ������ڵ㶼����
-        ����yarn  start-yarn.sh   ��yarn�����ڵ���ִ��
-    8  ��֤
+    7   启动hdfs  start-dfs.sh  在任意节点都可以
+        启动yarn  start-yarn.sh   在yarn的主节点上执行
+    8  验证
         hdfs  hadoop01:50070
         yarn  hadoop03:8088
-����������
-    ��������hdfs����ؽ���
+遇到的问题
+    单独启动hdfs的相关进程
         hadoop-daemon.sh start dfs
         hadoop-daemon.sh start namenode
         hadoop-daemon.sh start sercondarynamenode
-    ��������yarn���������
-        yarn-daemon.sh start yarn����ؽ���
+    单独启动yarn的相关命令
+        yarn-daemon.sh start yarn的相关进程
         yarn-daemon.sh start resourcemanager
 
-    ��Ҫ���¸�ʽ��
-        1 ɾ��namenode������Ŀ¼
+    想要重新格式化
+        1 删除namenode的数据目录
             rm -rf /home/hadoop/data/hadoopdata/name
-        2 ɾ��datanode������Ŀ¼
+        2 删除datanode的数据目录
             rm -rf /home/hadoop/data/hadoopdata/data
-        �������¸�ʽ��  ��������datanode��������
-        Ҳ����rm -rf /home/hadoop/data ���¸�ʽ��
-    ��������������
+        才能重新格式化  负责会造成datanode启动不了
+        也可以rm -rf /home/hadoop/data 重新格式化
+    环境变量的配置
         jdk  hadoop
-        ��linux�޸Ļ�������
-        1 /etc/profile  ϵͳ������������������û��ı���
-        2 ~/.bashrc   ��Ŀ¼  �û���������  ��Ե�ǰ�û�
-        3 ~.bash_profile  �û���������  ��Ե�ǰ�û�
-        ����˳��  1 --> 2 --> 3
-    ʱ��ͬ������   ֻҪ����ȫ�ֲ�ʽ �����ڵ�֮��һ��Ҫʱ��ͬ��
-        ��Ⱥ�ڲ������ڵ�֮����Ҫͨ�ţ�������datanode��namenode֮�䣬����֮����ͨ������ͨ�ŵ�
-        ����֮�����������һ��ʱ����Ƶ�  ���ʱ����630S
+        在linux修改环境变量
+        1 /etc/profile  系统环境变量是针对所有用户的变量
+        2 ~/.bashrc   家目录  用户环境变量  针对当前用户
+        3 ~.bash_profile  用户环境变量  针对当前用户
+        加载顺序  1 --> 2 --> 3
+    时间同步问题   只要是完全分布式 各个节点之间一定要时间同步
+        集群内部各个节点之间需要通信，尤其是datanode和namenode之间，他们之间是通过心跳通信的
+        他们之间的心跳是有一个时间控制的  这个时间是630S
 
 
 ant jar -Dhadoop.version=2.9.0 -Declipse.home=D:\soft\eclipse -Dhadoop.home=F:\hadoop\hadoop-2.9.0\hadoop-2.9.0
-
-

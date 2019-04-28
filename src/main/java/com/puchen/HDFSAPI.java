@@ -29,14 +29,10 @@ public class HDFSAPI {
 
 
     public void testUpload() throws Exception{
-        //??HDFS????????
-        //??????????????????????????
         InputStream in = new FileInputStream(("D:\\study\\item\\study\\Hadoop\\pom.xml"));
-        //???HDFS??fileStstem??????????
         FSDataOutputStream out= fileSystem.create(new Path("/pom1.xml"));
         IOUtils.copyBytes(in,out,1024,true);
 
-        //???fileSystem????
         fileSystem.close();
 
     }
@@ -44,7 +40,6 @@ public class HDFSAPI {
     public void testMkdir() throws Exception{
         fileSystem.mkdirs(new Path("/a/b"));
 
-        //???fileSystem????
         fileSystem.close();
 
     }
@@ -73,7 +68,6 @@ public class HDFSAPI {
         OutputStream out = new FileOutputStream("d://123.txt");
 
         IOUtils.copyBytes(in,out,1024,true);
-        //???fileSystem????
         fileSystem.close();
     }
 }
